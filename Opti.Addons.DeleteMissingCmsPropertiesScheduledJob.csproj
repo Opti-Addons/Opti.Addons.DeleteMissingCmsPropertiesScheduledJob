@@ -24,11 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include=".github\workflows\dotnet.yml" />
+        <None Include="README.MD" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="README.MD" Pack="true" PackagePath="\"/>
+      <Folder Include=".github\workflows\" />
     </ItemGroup>
 
 </Project>
