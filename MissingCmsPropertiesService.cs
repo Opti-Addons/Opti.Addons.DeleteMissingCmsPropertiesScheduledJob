@@ -12,7 +12,7 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
         typeof(PageData),
         typeof(BlockData),
         typeof(MediaData),
-        typeof(ContentFolder),
+        typeof(ContentFolder)
     };
 
     public MissingCmsPropertiesService(IContentTypeRepository contentTypeRepository,
