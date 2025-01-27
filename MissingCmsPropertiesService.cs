@@ -13,13 +13,9 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
         typeof(ContentFolder)
     };
     
-    private readonly List<string> _excludedAssemblies = new()
+    private readonly List<string> _excludedBaseTypes = new()
     {
-        "EPiServer.Forms",
-        "EPiServer.Forms.UI",
-        "EPiServer.Forms.Core",
-        "EPiServer.Forms.Samples",
-        "Optimizely.Labs.MarketingAutomationIntegration.ODP"
+        "EPiServer.Forms.Core.BlockBase" 
     };
 
     public MissingCmsPropertiesService(IContentTypeRepository contentTypeRepository,
@@ -35,7 +31,7 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
         var allTypes = _contentTypeRepository.List().ToList();
 
         var types = allTypes.Where(t => _allowedTypes.Any(x => x.IsAssignableFrom(t.ModelType)))
-                            .Where(t => !_excludedAssemblies.Contains(t.ModelType.Assembly.GetName().Name, StringComparer.OrdinalIgnoreCase))
+                            .Where(t => !_excludedBaseTypes.Any(x => DoesInheritFrom(t.ModelType, x)))
                             .ToList();
 
         foreach (var contentType in types)
@@ -61,5 +57,12 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
             
             _propertyDefinitionRepository.Delete(propertyToRemove);
         }
+    }
+    
+    private static bool DoesInheritFrom(Type type, string baseType)
+    {
+        if (type == null) return false;
+        if (string.Equals(type.FullName, baseType, StringComparison.OrdinalIgnoreCase)) return true;
+        return DoesInheritFrom(type.BaseType, baseType);
     }
 }
