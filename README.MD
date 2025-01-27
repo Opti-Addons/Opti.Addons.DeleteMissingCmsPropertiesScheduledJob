@@ -32,5 +32,4 @@ If the version of your .NET or CMS package are different, you may either:
 
 # 📃 Version history
 
-* 0.1.0
-  * Initial version
+* See https://github.com/Opti-Addons/Opti.Addons.DeleteMissingCmsPropertiesScheduledJob/releases.
