@@ -1,5 +1,3 @@
-using EPiServer.Core;
-
 namespace OptimizelyDeleteMissingCmsProperties;
 
 public class MissingCmsPropertiesService : IMissingCmsPropertiesService
@@ -13,6 +11,15 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
         typeof(BlockData),
         typeof(MediaData),
         typeof(ContentFolder)
+    };
+    
+    private readonly List<string> _excludedAssemblies = new()
+    {
+        "EPiServer.Forms",
+        "EPiServer.Forms.UI",
+        "EPiServer.Forms.Core",
+        "EPiServer.Forms.Samples",
+        "Optimizely.Labs.MarketingAutomationIntegration.ODP"
     };
 
     public MissingCmsPropertiesService(IContentTypeRepository contentTypeRepository,
@@ -28,6 +35,7 @@ public class MissingCmsPropertiesService : IMissingCmsPropertiesService
         var allTypes = _contentTypeRepository.List().ToList();
 
         var types = allTypes.Where(t => _allowedTypes.Any(x => x.IsAssignableFrom(t.ModelType)))
+                            .Where(t => !_excludedAssemblies.Contains(t.ModelType.Assembly.GetName().Name, StringComparer.OrdinalIgnoreCase))
                             .ToList();
 
         foreach (var contentType in types)
